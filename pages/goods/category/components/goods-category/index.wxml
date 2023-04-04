@@ -3,7 +3,7 @@
 		<c-sidebar-item
 		  wx:for="{{ category }}"
 		  wx:key="index"
-		  title="{{ item.name }}"
+		  title="{{ item.categoryName }}"
 		  disabled="{{ item.disabled }}"
 		/>
 	</c-sidebar>
@@ -17,15 +17,15 @@
 			<slot/>
 		</c-tabbar>
 		<view wx:if="{{!isSlotRight}}" class="goods-category-normal">
-			<view class="goods-category-normal-item" wx:if="{{category[activeKey].children && category[activeKey].children.length > 0}}">
-				<block wx:for="{{category[activeKey].children}}" wx:key="index" wx:if="{{level === 3 && item.children && item.children.length > 0}}">
+			<view class="goods-category-normal-item" wx:if="{{category[activeKey].categoryChild && category[activeKey].categoryChild.length > 0}}">
+				<block wx:for="{{category[activeKey].categoryChild}}" wx:key="index" wx:if="{{level === 3 && item.categoryChild && item.categoryChild.length > 0}}">
 					<view class="flex goods-category-normal-item-title">
-						{{item.name}}
+						{{item.categoryName}}
 					</view>
 					<view class="goods-category-normal-item-container">
 						<view
 						  class="goods-category-normal-item-container-item"
-						  wx:for="{{item.children}}"
+						  wx:for="{{item.categoryChild}}"
 						  wx:for-index="subIndex"
 						  wx:key="subIndex"
 						  wx:for-item="subItem"
@@ -34,13 +34,13 @@
 						>
 							<t-image src="{{subItem.thumbnail}}" t-class="image" />
 							<view class="flex goods-category-normal-item-container-item-title">
-								{{subItem.name}}
+								{{subItem.categoryName}}
 							</view>
 						</view>
 					</view>
 				</block>
 				<view class="goods-category-normal-item-second-container" wx:if="{{level === 2}}">
-					<block wx:for="{{category[activeKey].children}}" wx:key="index">
+					<block wx:for="{{category[activeKey].categoryChild}}" wx:key="index">
 						<view
 						  class="goods-category-normal-item-second-container-item"
 						  wx:for-key="index"

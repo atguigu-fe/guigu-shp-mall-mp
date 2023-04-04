@@ -5,9 +5,9 @@ Page({
   },
   async init() {
     try {
-      const result = await getCategoryList();
+      const result = await getCategoryList({});
       this.setData({
-        list: result,
+        list: result.data,
       });
     } catch (error) {
       console.error('err:', error);
@@ -17,10 +17,11 @@ Page({
   onShow() {
     this.getTabBar().init();
   },
-  onChange() {
-    wx.navigateTo({
-      url: '/pages/goods/list/index',
-    });
+  onChange(item) {
+    console.log(item);
+    // wx.navigateTo({
+    //   url: '/pages/goods/list/index',
+    // });
   },
   onLoad() {
     this.init(true);
