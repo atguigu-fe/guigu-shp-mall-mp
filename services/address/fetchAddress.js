@@ -1,3 +1,4 @@
+import { request } from '../../utils/request';
 import { config } from '../../config/index';
 
 /** 获取收货地址 */
@@ -45,4 +46,11 @@ export function fetchDeliveryAddressList(len = 10) {
   return new Promise((resolve) => {
     resolve('real api');
   });
+}
+
+export function fetchUserAddressList() {
+  return request({
+    url: `/api/user/userAddress/auth/findUserAddressList`,
+    method: 'GET',
+  })
 }

@@ -9,9 +9,9 @@ function mockFetchGoodCategory() {
 
 /** 获取商品列表 */
 export function getCategoryList() {
-  // if (config.useMock) {
-  //   return mockFetchGoodCategory();
-  // }
+  if (!config.useMock) {
+    return mockFetchGoodCategory();
+  }
   return request({
     url: `/api/product/getBaseCategoryList`,
     method: 'GET',

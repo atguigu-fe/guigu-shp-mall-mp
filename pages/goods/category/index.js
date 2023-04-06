@@ -17,11 +17,12 @@ Page({
   onShow() {
     this.getTabBar().init();
   },
-  onChange(item) {
-    console.log(item);
-    // wx.navigateTo({
-    //   url: '/pages/goods/list/index',
-    // });
+  onChange(e) {
+    console.log(e);
+    const categoryId = e.detail.item.categoryId;
+    wx.navigateTo({
+      url: `/pages/goods/list/index?category3Id=${categoryId}`,
+    });
   },
   onLoad() {
     this.init(true);

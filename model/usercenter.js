@@ -1,13 +1,13 @@
 const userInfo = {
   avatarUrl:
-    'https://we-retail-static-1300977798.cos.ap-guangzhou.myqcloud.com/retail-ui/components-exp/avatar/avatar-1.jpg',
-  nickName: 'TDesign 🌟',
+    'https://file.sheepjs.com/static/img/shop/default_avatar.png',
+  nickName: '尚硅谷',
   phoneNumber: '13438358888',
   gender: 2,
 };
 const countsData = [
   {
-    num: 2,
+    num: 0,
     name: '积分',
     type: 'point',
   },
@@ -38,8 +38,8 @@ const orderTagInfos = [
 ];
 
 const customerServiceInfo = {
-  servicePhone: '4006336868',
-  serviceTimeDuration: '每周三至周五 9:00-12:00  13:00-15:00',
+  servicePhone: '13381100972',
+  serviceTimeDuration: '每周一至周五 9:00-12:00  13:00-18:00',
 };
 
 export const genSimpleUserInfo = () => ({ ...userInfo });

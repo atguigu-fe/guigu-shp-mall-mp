@@ -8,56 +8,56 @@
 	<view class="wr-goods-card__main">
 		<view class="wr-goods-card__thumb thumb-class" bind:tap="clickThumbHandle">
 			<!-- data-src 是方便加购动画读取图片用的 -->
-			<t-image
+			<!-- <t-image
 			 t-class="wr-goods-card__thumb-com"
-			 wx:if="{{ !!goods.thumb && !goods.hideKey.thumb }}"
-			 src="{{ goods.thumb }}"
+			 src="http://47.93.148.192:8080/group1/M00/00/02/rBHu8l-rgfWAVRWzAABUiOmA0ic932.jpg"
 			 mode="{{ thumbMode }}"
 			 lazy-load="{{ lazyLoad }}"
-			/>
+			/> -->
+			<image src="{{goods.imgUrl}}" class="wr-goods-card__thumb-com" mode="aspectFill" />
 			<slot name="thumb-cover" />
 		</view>
 
 		<view class="wr-goods-card__body">
 			<view class="wr-goods-card__long_content">
-				<view wx:if="{{ goods.title && !goods.hideKey.title }}" class="wr-goods-card__title title-class" style="-webkit-line-clamp: {{ goods.lineClamp }};">
+				<view wx:if="{{ goods.skuName}}" class="wr-goods-card__title title-class" style="-webkit-line-clamp: {{ goods.lineClamp }};">
 					<slot name="before-title" />
-					{{ goods.title }}
+					{{ goods.skuName }}
 				</view>
 				<slot name="after-title" />
-				<view wx:if="{{ goods.desc && !goods.hideKey.desc }}" class="wr-goods-card__desc desc-class">{{ goods.desc }}</view>
+				<!-- <view wx:if="{{ goods.desc && !goods.hideKey.desc }}" class="wr-goods-card__desc desc-class">{{ goods.desc }}</view>
 				<slot name="after-desc" />
 				<view wx:if="{{ goods.specs && goods.specs.length > 0 && !goods.hideKey.specs }}" class="wr-goods-card__specs__desc specs-class" bind:tap="clickSpecsHandle">
 					<view class="wr-goods-card__specs__desc-text">{{ goods.specs }}</view>
 				</view>
-				<view class="goods_tips" wx:if="{{goods.stockQuantity !== 0 && goods.quantity >= goods.stockQuantity}}">库存不足</view>
+				<view class="goods_tips" wx:if="{{goods.stockQuantity !== 0 && goods.quantity >= goods.stockQuantity}}">库存不足</view> -->
 			</view>
 
 			<view class="wr-goods-card__short_content">
 				<block wx:if="{{goods.stockQuantity !== 0}}">
 					<view wx:if="{{ pricePrefix }}" class="wr-goods-card__price__prefix price-prefix-class">{{ pricePrefix }}</view>
 					<slot name="price-prefix" />
-					<view wx:if="{{ goods.price && !goods.hideKey.price }}" class="wr-goods-card__price">
+					<view wx:if="{{ goods.orderPrice }}" class="wr-goods-card__price">
 						<price
 						 wr-class="price-class"
 						 symbol="{{currency}}"
-						 price="{{goods.price}}"
+						 price="{{goods.orderPrice}}"
 						 fill="{{priceFill}}"
 						 decimalSmaller
 						/>
 					</view>
-					<view wx:if="{{ goods.originPrice && !goods.hideKey.originPrice && isValidityLinePrice }}" class="wr-goods-card__origin-price">
+					<!-- <view wx:if="{{ goods.originPrice && !goods.hideKey.originPrice && isValidityLinePrice }}" class="wr-goods-card__origin-price">
 						<price
 						 wr-class="origin-price-class"
 						 symbol="{{currency}}"
 						 price="{{goods.originPrice}}"
 						 fill="{{priceFill}}"
 						/>
-					</view>
+					</view> -->
 					<slot name="origin-price" />
-					<view wx:if="{{goods.num && !goods.hideKey.num}}" class="wr-goods-card__num num-class">
+					<view wx:if="{{goods.skuNum}}" class="wr-goods-card__num num-class">
 						<text class="wr-goods-card__num__prefix">x </text>
-						{{ goods.num }}
+						{{ goods.skuNum }}
 					</view>
 				</block>
 				<block wx:else>

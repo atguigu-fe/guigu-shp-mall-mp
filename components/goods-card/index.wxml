@@ -6,13 +6,14 @@
 >
 	<view class="goods-card__main">
 		<view class="goods-card__thumb" bind:tap="clickThumbHandle">
-			<t-image
-			  wx:if="{{ !!goods.thumb }}"
+			<!-- <t-image
+			  wx:if="{{ !!goods.defaultImg }}"
 			  t-class="goods-card__img"
-			  src="{{ goods.thumb }}"
+			  src="{{ goods.defaultImg }}"
 			  mode="aspectFill"
 			  lazy-load
-			/>
+			/> -->
+			<image src="{{goods.defaultImg}}" class="goods-card__img" mode="aspectFill" />
 		</view>
 		<view class="goods-card__body">
 			<view class="goods-card__upper">

@@ -1,4 +1,5 @@
 import { config } from '../../config/index';
+import { request } from '../../utils/request';
 
 /** 获取订单列表mock数据 */
 function mockFetchOrders(params) {
@@ -17,6 +18,14 @@ export function fetchOrders(params) {
   return new Promise((resolve) => {
     resolve('real api');
   });
+}
+
+export function fetchOrderList(params) {
+  const { pageSize, pageNum } = params.parameter
+  return request({
+    url: `/api/order/auth/${pageNum}/${pageSize}`,
+    method: 'GET'
+  })
 }
 
 /** 获取订单列表mock数据 */

@@ -104,16 +104,16 @@ Page({
     const _searchValue = historyWords[dataset.index || 0] || '';
     if (_searchValue) {
       wx.navigateTo({
-        url: `/pages/goods/result/index?searchValue=${_searchValue}`,
+        url: `/pages/goods/result/index?keyword=${_searchValue}`,
       });
     }
   },
 
   handleSubmit(e) {
-    const { value } = e.detail.value;
+    const { value } = e.detail;
     if (value.length === 0) return;
     wx.navigateTo({
-      url: `/pages/goods/result/index?searchValue=${value}`,
+      url: `/pages/goods/result/index?keyword=${value}`,
     });
   },
 });

@@ -1,6 +1,6 @@
 import { OrderStatus } from '../config';
 import {
-  fetchOrders,
+  fetchOrderList,
   fetchOrdersCount,
 } from '../../../services/order/orderList';
 import { cosThumb } from '../../../utils/util';
@@ -83,42 +83,12 @@ Page({
     };
     if (statusCode !== -1) params.parameter.orderStatus = statusCode;
     this.setData({ listLoading: 1 });
-    return fetchOrders(params)
+    return fetchOrderList(params)
       .then((res) => {
         this.page.num++;
         let orderList = [];
-        if (res && res.data && res.data.orders) {
-          orderList = (res.data.orders || []).map((order) => {
-            return {
-              id: order.orderId,
-              orderNo: order.orderNo,
-              parentOrderNo: order.parentOrderNo,
-              storeId: order.storeId,
-              storeName: order.storeName,
-              status: order.orderStatus,
-              statusDesc: order.orderStatusName,
-              amount: order.paymentAmount,
-              totalAmount: order.totalAmount,
-              logisticsNo: order.logisticsVO.logisticsNo,
-              createTime: order.createTime,
-              goodsList: (order.orderItemVOs || []).map((goods) => ({
-                id: goods.id,
-                thumb: cosThumb(goods.goodsPictureUrl, 70),
-                title: goods.goodsName,
-                skuId: goods.skuId,
-                spuId: goods.spuId,
-                specs: (goods.specifications || []).map(
-                  (spec) => spec.specValue,
-                ),
-                price: goods.tagPrice ? goods.tagPrice : goods.actualPrice,
-                num: goods.buyQuantity,
-                titlePrefixTags: goods.tagText ? [{ text: goods.tagText }] : [],
-              })),
-              buttons: order.buttonVOs || [],
-              groupInfoVo: order.groupInfoVo,
-              freightFee: order.freightFee,
-            };
-          });
+        if (res && res.data && res.data.records) {
+          orderList = res.data.records;   
         }
         return new Promise((resolve) => {
           if (reset) {

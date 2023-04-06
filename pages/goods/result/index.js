@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
-import { getSearchResult } from '../../../services/good/fetchSearchResult';
 import Toast from 'tdesign-miniprogram/toast/index';
-
+import { fetchGoodsList } from '../../../services/good/fetchGoods';
 const initFilters = {
   overall: 1,
   sorts: '',
@@ -19,7 +18,7 @@ Page({
     maxSalePriceFocus: false,
     filter: initFilters,
     hasLoaded: false,
-    keywords: '',
+    keyword: '',
     loadMoreStatus: 0,
     loading: true,
   },
@@ -29,10 +28,10 @@ Page({
   pageSize: 30,
 
   onLoad(options) {
-    const { searchValue = '' } = options || {};
+    const { keyword = '' } = options || {};
     this.setData(
       {
-        keywords: searchValue,
+        keyword,
       },
       () => {
         this.init(true);
@@ -41,14 +40,14 @@ Page({
   },
 
   generalQueryData(reset = false) {
-    const { filter, keywords, minVal, maxVal } = this.data;
+    const { filter, keyword, minVal, maxVal } = this.data;
     const { pageNum, pageSize } = this;
     const { sorts, overall } = filter;
     const params = {
       sort: 0, // 0 综合，1 价格
-      pageNum: 1,
+      pageNo: 1,
       pageSize: 30,
-      keyword: keywords,
+      keyword
     };
 
     if (sorts) {
@@ -65,7 +64,7 @@ Page({
     if (reset) return params;
     return {
       ...params,
-      pageNum: pageNum + 1,
+      pageNo: pageNum + 1,
       pageSize,
     };
   },
@@ -79,13 +78,14 @@ Page({
       loading: true,
     });
     try {
-      const result = await getSearchResult(params);
+      const result = await fetchGoodsList(params);
+
       const code = 'Success';
-      const data = result;
+      const data = result.data;
       if (code.toUpperCase() === 'SUCCESS') {
-        const { spuList, totalCount = 0 } = data;
-        if (totalCount === 0 && reset) {
-          this.total = totalCount;
+        const { goodsList, total = 0 } = data;
+        if (total === 0 && reset) {
+          this.total = total;
           this.setData({
             emptyInfo: {
               tip: '抱歉，未找到相关商品',
@@ -98,14 +98,11 @@ Page({
           return;
         }
 
-        const _goodsList = reset ? spuList : goodsList.concat(spuList);
-        _goodsList.forEach((v) => {
-          v.tags = v.spuTagList.map((u) => u.title);
-          v.hideKey = { desc: true };
-        });
-        const _loadMoreStatus = _goodsList.length === totalCount ? 2 : 0;
-        this.pageNum = params.pageNum || 1;
-        this.total = totalCount;
+        const _goodsList = reset ? goodsList : goodsList.concat(goodsList);
+
+        const _loadMoreStatus = _goodsList.length === total ? 2 : 0;
+        this.pageNum = params.pageNo || 1;
+        this.total = total;
         this.setData({
           goodsList: _goodsList,
           loadMoreStatus: _loadMoreStatus,

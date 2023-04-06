@@ -1,4 +1,4 @@
-import { fetchHome } from '../../services/home/home';
+import { fetchHome, fetchBanner } from '../../services/home/home';
 import { fetchGoodsList } from '../../services/good/fetchGoods';
 import Toast from 'tdesign-miniprogram/toast/index';
 
@@ -12,13 +12,13 @@ Page({
     current: 1,
     autoplay: true,
     duration: '500',
-    interval: 5000,
+    interval: 3000,
     navigation: { type: 'dots' },
     swiperImageProps: { mode: 'scaleToFill' },
   },
 
   goodListPagination: {
-    index: 0,
+    index: 1,
     num: 20,
   },
 
@@ -48,20 +48,25 @@ Page({
     this.loadHomePage();
   },
 
-  loadHomePage() {
+  async loadHomePage() {
     wx.stopPullDownRefresh();
 
     this.setData({
       pageLoading: true,
     });
-    fetchHome().then(({ swiper, tabList }) => {
+    fetchHome().then(({ tabList }) => {
       this.setData({
         tabList,
-        imgSrcs: swiper,
         pageLoading: false,
       });
       this.loadGoodsList(true);
     });
+    // 获取首页banner
+    const result  = await fetchBanner()
+    const bannerList = result.data.map((item) => item.imageUrl)
+    this.setData({
+      imgSrcs: bannerList
+    })
   },
 
   tabChangeHandle(e) {
@@ -85,11 +90,17 @@ Page({
     const pageSize = this.goodListPagination.num;
     let pageIndex = this.privateData.tabIndex * pageSize + this.goodListPagination.index + 1;
     if (fresh) {
-      pageIndex = 0;
+      pageIndex = 1;
     }
 
     try {
-      const nextList = await fetchGoodsList(pageIndex, pageSize);
+      const params = {
+        category1Id: 2,
+        pageNo: pageIndex,
+        pageSize: pageSize
+      }
+      const result = await fetchGoodsList(params);
+      const nextList = result.data.goodsList
       this.setData({
         goodsList: fresh ? nextList : this.data.goodsList.concat(nextList),
         goodsListLoadStatus: 0,

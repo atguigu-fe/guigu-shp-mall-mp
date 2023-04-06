@@ -160,7 +160,7 @@ Page({
         Toast({
           context: this,
           selector: '#t-toast',
-          message: '你点击了帮助中心',
+          message: '该功能暂未开放',
           icon: '',
           duration: 1000,
         });
@@ -170,7 +170,7 @@ Page({
         Toast({
           context: this,
           selector: '#t-toast',
-          message: '你点击了积分菜单',
+          message: '该功能暂未开放',
           icon: '',
           duration: 1000,
         });

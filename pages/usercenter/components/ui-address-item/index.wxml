@@ -10,14 +10,14 @@
       </view>
       <view class="address-content">
         <view class="title title-class">
-          <text class="text-style">{{address.name}}</text>
-          <text>{{phoneReg.toHide(address.phoneNumber || '')}}</text>
+          <text class="text-style">{{address.consignee}}</text>
+          <text>{{phoneReg.toHide(address.phoneNum || '')}}</text>
         </view>
         <view class="label-adds">
           <text class="adds address-info-class">
-            <text wx:if="{{address.isDefault === 1}}" class="tag tag-default default-tag-class">默认</text>
+            <text wx:if="{{address.isDefault === '1'}}" class="tag tag-default default-tag-class">默认</text>
             <text wx:if="{{address.tag}}" class="tag tag-primary normal-tag-class">{{address.tag}}</text>
-            <text class="address-text">{{address.address}}</text>
+            <text class="address-text">{{address.fullAddress}}</text>
           </text>
         </view>
       </view>

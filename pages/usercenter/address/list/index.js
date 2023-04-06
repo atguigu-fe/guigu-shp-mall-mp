@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { fetchDeliveryAddressList } from '../../../../services/address/fetchAddress';
+import { fetchUserAddressList } from '../../../../services/address/fetchAddress';
 import Toast from 'tdesign-miniprogram/toast/index';
 import { resolveAddress, rejectAddress } from './util';
 import { getAddressPromise } from '../edit/util';
@@ -35,16 +35,9 @@ Page({
       rejectAddress();
     }
   },
-  getAddressList() {
-    const { id } = this.data;
-    fetchDeliveryAddressList().then((addressList) => {
-      addressList.forEach((address) => {
-        if (address.id === id) {
-          address.checked = true;
-        }
-      });
-      this.setData({ addressList });
-    });
+  async getAddressList() {
+    const result = await fetchUserAddressList()
+    this.setData({ addressList: result.data });
   },
   getWXAddressHandle() {
     wx.chooseAddress({

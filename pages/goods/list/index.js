@@ -1,6 +1,6 @@
-import { fetchGoodsList } from '../../../services/good/fetchGoodsList';
+// import { fetchGoodsList } from '../../../services/good/fetchGoodsList';
 import Toast from 'tdesign-miniprogram/toast/index';
-
+import { fetchGoodsList } from '../../../services/good/fetchGoods';
 const initFilters = {
   overall: 1,
   sorts: '',
@@ -20,6 +20,7 @@ Page({
     hasLoaded: false,
     loadMoreStatus: 0,
     loading: true,
+    category3Id: ''
   },
 
   pageNum: 1,
@@ -44,9 +45,9 @@ Page({
     const { sorts, overall } = filter;
     const params = {
       sort: 0, // 0 综合，1 价格
-      pageNum: 1,
+      pageNo: 1,
       pageSize: 30,
-      keyword: keywords,
+      category3Id: this.data.category3Id
     };
 
     if (sorts) {
@@ -64,7 +65,7 @@ Page({
     if (reset) return params;
     return {
       ...params,
-      pageNum: pageNum + 1,
+      pageNo: pageNum + 1,
       pageSize,
     };
   },
@@ -80,11 +81,11 @@ Page({
     try {
       const result = await fetchGoodsList(params);
       const code = 'Success';
-      const data = result;
+      const data = result.data;
       if (code.toUpperCase() === 'SUCCESS') {
-        const { spuList, totalCount = 0 } = data;
-        if (totalCount === 0 && reset) {
-          this.total = totalCount;
+        const { goodsList, total = 0 } = data;
+        if (total === 0 && reset) {
+          this.total = total;
           this.setData({
             emptyInfo: {
               tip: '抱歉，未找到相关商品',
@@ -97,10 +98,10 @@ Page({
           return;
         }
 
-        const _goodsList = reset ? spuList : goodsList.concat(spuList);
-        const _loadMoreStatus = _goodsList.length === totalCount ? 2 : 0;
-        this.pageNum = params.pageNum || 1;
-        this.total = totalCount;
+        const _goodsList = reset ? goodsList : goodsList.concat(goodsList);
+        const _loadMoreStatus = _goodsList.length === total ? 2 : 0;
+        this.pageNum = params.pageNo || 1;
+        this.total = total;
         this.setData({
           goodsList: _goodsList,
           loadMoreStatus: _loadMoreStatus,
@@ -124,8 +125,16 @@ Page({
     });
   },
 
-  onLoad() {
-    this.init(true);
+  onLoad(options) {
+    const { category3Id } = options
+    this.setData(
+      {
+        category3Id,
+      },
+      () => {
+        this.init(true);
+      },
+    );
   },
 
   onReachBottom() {
