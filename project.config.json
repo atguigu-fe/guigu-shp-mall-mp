@@ -61,6 +61,12 @@
           "scene": null
         },
         {
+          "name": "购物车入口",
+          "pathName": "pages/cart/index",
+          "query": "",
+          "scene": null
+        },
+        {
           "name": "示例页-商品分类",
           "pathName": "pages/goods/category/index",
           "query": "",

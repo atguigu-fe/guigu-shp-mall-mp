@@ -1,10 +1,8 @@
 <!-- 分层购物车 -->
-<block wx:if="{{cartGroupData.isNotEmpty}}">
+<block wx:if="{{cartGroupData.length > 0}}">
   <cart-group
-    store-goods="{{ cartGroupData.storeGoods }}"
-    invalid-good-items="{{ cartGroupData.invalidGoodItems }}"
+    store-goods="{{ cartGroupData }}"
     bindselectgoods="onGoodsSelect"
-    bindselectstore="onStoreSelect"
     bindchangequantity="onQuantityChange"
     bindgocollect="goCollect"
     bindgoodsclick="goGoodsDetail"
@@ -15,10 +13,9 @@
   <view class="gap" />
   <!-- 商品小计以及结算按钮 -->
   <cart-bar
-    is-all-selected="{{cartGroupData.isAllSelected}}"
-    total-amount="{{cartGroupData.totalAmount}}"
-    total-goods-num="{{cartGroupData.selectedGoodsCount}}"
-    total-discount-amount="{{cartGroupData.totalDiscountAmount}}"
+    is-all-selected="{{isAllSelected}}"
+    total-amount="{{totalAmount}}"
+    total-goods-num="{{selectedGoodsCount}}"
     fixed="{{true}}"
     bottomHeight="{{112}}"
     bindhandleSelectAll="onSelectAll"

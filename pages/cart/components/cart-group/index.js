@@ -9,29 +9,7 @@ Component({
   properties: {
     storeGoods: {
       type: Array,
-      observer(storeGoods) {
-        for (const store of storeGoods) {
-          for (const activity of store.promotionGoodsList) {
-            for (const goods of activity.goodsPromotionList) {
-              goods.specs = goods.specInfo.map((item) => item.specValue); // 目前仅展示商品已选规格的值
-            }
-          }
-          for (const goods of store.shortageGoodsList) {
-            goods.specs = goods.specInfo.map((item) => item.specValue); // 目前仅展示商品已选规格的值
-          }
-        }
-
-        this.setData({ _storeGoods: storeGoods });
-      },
-    },
-    invalidGoodItems: {
-      type: Array,
-      observer(invalidGoodItems) {
-        invalidGoodItems.forEach((goods) => {
-          goods.specs = goods.specInfo.map((item) => item.specValue); // 目前仅展示商品已选规格的值
-        });
-        this.setData({ _invalidGoodItems: invalidGoodItems });
-      },
+      value: [],
     },
     thumbWidth: { type: null },
     thumbHeight: { type: null },
@@ -43,7 +21,6 @@ Component({
     currentGoods: {},
     isShowToggle: false,
     _storeGoods: [],
-    _invalidGoodItems: [],
   },
 
   methods: {
@@ -63,23 +40,21 @@ Component({
       const { goods } = e.currentTarget.dataset;
       this.triggerEvent('selectgoods', {
         goods,
-        isSelected: !goods.isSelected,
+        isChecked: goods.isChecked ? 0 : 1,
       });
     },
 
     changeQuantity(num, goods) {
       this.triggerEvent('changequantity', {
         goods,
-        quantity: num,
+        skuNum: num,
       });
     },
     changeStepper(e) {
       const { value } = e.detail;
       const { goods } = e.currentTarget.dataset;
-      let num = value;
-      if (value > goods.stack) {
-        num = goods.stack;
-      }
+      let num = 0;
+      num = value - goods.skuNum
       this.changeQuantity(num, goods);
     },
 

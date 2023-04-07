@@ -7,8 +7,8 @@ Component({
    */
   properties: {
     isAllSelected: {
-      type: Boolean,
-      value: false,
+      type: Number,
+      value: 0,
     },
     totalAmount: {
       type: Number,
@@ -43,11 +43,8 @@ Component({
   methods: {
     handleSelectAll() {
       const { isAllSelected } = this.data;
-      this.setData({
-        isAllSelected: !isAllSelected,
-      });
       this.triggerEvent('handleSelectAll', {
-        isAllSelected: isAllSelected,
+        isAllSelected: isAllSelected ? 0 : 1,
       });
     },
 

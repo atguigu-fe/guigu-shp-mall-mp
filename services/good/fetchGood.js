@@ -1,4 +1,5 @@
 import { config } from '../../config/index';
+import { request } from '../../utils/request';
 
 /** 获取商品列表 */
 function mockFetchGood(ID = 0) {
@@ -8,11 +9,11 @@ function mockFetchGood(ID = 0) {
 }
 
 /** 获取商品列表 */
-export function fetchGood(ID = 0) {
-  if (config.useMock) {
-    return mockFetchGood(ID);
+export function fetchGood(id = 0) {
+  if (!config.useMock) {
+    return mockFetchGood(id);
   }
-  return new Promise((resolve) => {
-    resolve('real api');
-  });
+  return request({
+    url: `/api/item/${id}`
+  })
 }

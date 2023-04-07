@@ -4,7 +4,7 @@
       <t-icon name="close" size="36rpx" />
     </view>
     <view class="popup-sku-header">
-      <t-image t-class="popup-sku-header__img" src="{{src}}" />
+      <image class="popup-sku-header__img" src="{{src}}" />
       <view class="popup-sku-header__goods-info">
         <view class="popup-sku__goods-name">{{title}}</view>
         <view class="goods-price-container">
@@ -16,12 +16,12 @@
           <view wx:for="{{specList}}" wx:key="specId">
             <view
               class="popup-sku__selected-item"
-              wx:for="{{item.specValueList}}"
+              wx:for="{{item.spuSaleAttrValueList}}"
               wx:for-item="selectedItem"
-              wx:if="{{selectedItem.isSelected}}"
+              wx:if="{{selectedItem.isChecked === '1'}}"
               wx:key="specValueId"
             >
-              {{selectedItem.specValue}}
+              {{selectedItem.saleAttrValueName}}
             </view>
           </view>
         </view>
@@ -30,22 +30,22 @@
     <view class="popup-sku-body">
       <view class="popup-sku-group-container">
         <view class="popup-sku-row" wx:for="{{specList}}" wx:key="specId">
-          <view class="popup-sku-row__title">{{item.title}}</view>
+          <view class="popup-sku-row__title">{{item.saleAttrName}}</view>
           <block
-            wx:for="{{item.specValueList}}"
+            wx:for="{{item.spuSaleAttrValueList}}"
             wx:for-item="valuesItem"
             wx:for-index="valuesIndex"
             wx:key="specValueId"
           >
             <view
-              class="popup-sku-row__item {{valuesItem.isSelected ? 'popup-sku-row__item--active' : ''}} {{!valuesItem.hasStockObj.hasStock || !isStock ? 'disabled-sku-selected' : ''}}"
-              data-specid="{{item.specId}}"
-              data-id="{{valuesItem.specValueId}}"
+              class="popup-sku-row__item {{valuesItem.isChecked === '1' ? 'popup-sku-row__item--active' : ''}} {{!isStock ? 'disabled-sku-selected' : ''}}"
+              data-specid="{{item.id}}"
+              data-id="{{valuesItem.id}}"
               data-val="{{valuesItem.specValue}}"
-              data-hasStock="{{valuesItem.hasStockObj.hasStock}}"
+              data-hasStock="{{true}}"
               bindtap="toChooseItem"
             >
-              {{valuesItem.specValue}}
+              {{valuesItem.saleAttrValueName}}
             </view>
           </block>
         </view>
@@ -56,7 +56,7 @@
             购买数量
             <view class="limit-text" wx:if="{{limitBuyInfo}}"> ({{limitBuyInfo}}) </view>
           </view>
-          <t-stepper value="{{buyNum}}" min="{{1}}" max="{{2}}" theme="filled" bind:change="handleBuyNumChange" />
+          <t-stepper value="{{buyNum}}" min="{{1}}" theme="filled" bind:change="handleBuyNumChange" />
         </view>
       </view>
     </view>

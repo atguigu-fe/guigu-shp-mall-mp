@@ -4,7 +4,7 @@ Component({
   properties: {
     priceUnit: {
       type: String,
-      value: 'fen',
+      value: 'yuan',
     }, // 价格单位，分 | 元, fen，yuan
     price: {
       type: null,

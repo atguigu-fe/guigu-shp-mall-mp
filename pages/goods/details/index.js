@@ -37,6 +37,7 @@ Page({
     recLeftImg,
     recRightImg,
     details: {},
+    skuInfo: {},
     goodsTabArray: [
       {
         name: '商品',
@@ -62,9 +63,9 @@ Page({
         showCartNum: true,
       },
     ],
-    isStock: true,
+    isStock: true, // 是否售罄（无库存）
     cartNum: 0,
-    soldout: false,
+    soldout: false, // 是否下架
     buttonType: 1,
     buyNum: 1,
     selectedAttrStr: '',
@@ -87,7 +88,7 @@ Page({
     autoplay: true,
     duration: 500,
     interval: 5000,
-    soldNum: 0, // 已售数量
+    bannerList: []
   },
 
   handlePopupHide() {
@@ -134,17 +135,19 @@ Page({
   },
 
   chooseSpecItem(e) {
-    const { specList } = this.data.details;
-    const { selectedSku, isAllSelectedSku } = e.detail;
-    if (!isAllSelectedSku) {
-      this.setData({
-        selectSkuSellsPrice: 0,
-      });
-    }
-    this.setData({
-      isAllSelectedSku,
-    });
-    this.getSkuItem(specList, selectedSku);
+    console.log(e);
+    const { specList } = e.detail;
+    console.log(specList);
+    // const { selectedSku, isAllSelectedSku } = e.detail;
+    // if (!isAllSelectedSku) {
+    //   this.setData({
+    //     selectSkuSellsPrice: 0,
+    //   });
+    // }
+    // this.setData({
+    //   isAllSelectedSku,
+    // });
+    // this.getSkuItem(specList, selectedSku);
   },
 
   getSkuItem(specList, selectedSku) {
@@ -309,24 +312,21 @@ Page({
 
   getDetail(spuId) {
     Promise.all([fetchGood(spuId), fetchActivityList()]).then((res) => {
-      const [details, activityList] = res;
-      const skuArray = [];
+      const [detail, activityList] = res;
+      const details = detail.data
+      // const skuArray = [];
       const {
-        skuList,
-        primaryImage,
-        isPutOnSale,
-        minSalePrice,
-        maxSalePrice,
-        maxLinePrice,
-        soldNum,
+        skuAttrList,
+        price,
+        skuInfo,
       } = details;
-      skuList.forEach((item) => {
-        skuArray.push({
-          skuId: item.skuId,
-          quantity: item.stockInfo ? item.stockInfo.stockQuantity : 0,
-          specInfo: item.specInfo,
-        });
-      });
+      // skuAttrList.forEach((item) => {
+      //   skuArray.push({
+      //     skuId: item.skuId,
+      //     quantity: item.stockInfo ? item.stockInfo.stockQuantity : 0,
+      //     specInfo: item.specInfo,
+      //   });
+      // });
       const promotionArray = [];
       activityList.forEach((item) => {
         promotionArray.push({
@@ -334,18 +334,20 @@ Page({
           label: '满100元减99.9元',
         });
       });
+      const bannerList = details.spuPosterList.map((item) => item.imgUrl)
       this.setData({
         details,
+        bannerList,
         activityList,
-        isStock: details.spuStockQuantity > 0,
-        maxSalePrice: maxSalePrice ? parseInt(maxSalePrice) : 0,
-        maxLinePrice: maxLinePrice ? parseInt(maxLinePrice) : 0,
-        minSalePrice: minSalePrice ? parseInt(minSalePrice) : 0,
+        isStock: true,
+        maxSalePrice: price ? parseInt(price) : 0,
+        maxLinePrice: price ? parseInt(price) : 0,
+        minSalePrice: price ? parseInt(price) : 0,
         list: promotionArray,
-        skuArray: skuArray,
-        primaryImage,
-        soldout: isPutOnSale === 0,
-        soldNum,
+        skuArray: skuAttrList,
+        primaryImage: skuInfo.skuDefaultImg,
+        soldout: false,
+        skuInfo,
       });
     });
   },
@@ -378,15 +380,9 @@ Page({
 
   onShareAppMessage() {
     // 自定义的返回信息
-    const { selectedAttrStr } = this.data;
-    let shareSubTitle = '';
-    if (selectedAttrStr.indexOf('件') > -1) {
-      const count = selectedAttrStr.indexOf('件');
-      shareSubTitle = selectedAttrStr.slice(count + 1, selectedAttrStr.length);
-    }
     const customInfo = {
-      imageUrl: this.data.details.primaryImage,
-      title: this.data.details.title + shareSubTitle,
+      imageUrl: this.data.skuInfo.skuDefaultImg,
+      title: this.data.skuInfo.skuName,
       path: `/pages/goods/details/index?spuId=${this.data.spuId}`,
     };
     return customInfo;
@@ -433,6 +429,7 @@ Page({
 
   onLoad(query) {
     const { spuId } = query;
+    console.log(spuId);
     this.setData({
       spuId: spuId,
     });

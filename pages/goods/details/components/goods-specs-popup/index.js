@@ -33,25 +33,9 @@ Component({
       type: Number,
       value: 1,
     },
-    skuList: {
-      type: Array,
-      value: [],
-      observer(skuList) {
-        if (skuList && skuList.length > 0) {
-          if (this.initStatus) {
-            this.initData();
-          }
-        }
-      },
-    },
     specList: {
       type: Array,
-      value: [],
-      observer(specList) {
-        if (specList && specList.length > 0) {
-          this.initData();
-        }
-      },
+      value: []
     },
     outOperateStatus: {
       type: Boolean,
@@ -72,39 +56,14 @@ Component({
     },
   },
 
-  initStatus: false,
-  selectedSku: {},
-  selectSpecObj: {},
-
   data: {
     buyNum: 1,
     isAllSelectedSku: false,
   },
 
   methods: {
-    initData() {
-      const { skuList } = this.properties;
-      const { specList } = this.properties;
-      specList.forEach((item) => {
-        if (item.specValueList.length > 0) {
-          item.specValueList.forEach((subItem) => {
-            const obj = this.checkSkuStockQuantity(subItem.specValueId, skuList);
-            subItem.hasStockObj = obj;
-          });
-        }
-      });
-      const selectedSku = {};
-      specList.forEach((item) => {
-        selectedSku[item.specId] = '';
-      });
-      this.setData({
-        specList,
-      });
-      this.selectSpecObj = {};
-      this.selectedSku = {};
-      this.initStatus = true;
-    },
 
+    // 检查不同规格商品的库存
     checkSkuStockQuantity(specValueId, skuList) {
       let hasStock = false;
       const array = [];
@@ -254,35 +213,24 @@ Component({
         });
         return;
       }
-
-      let { selectedSku } = this;
       const { specList } = this.properties;
-      selectedSku =
-        selectedSku[specId] === id ? { ...this.selectedSku, [specId]: '' } : { ...this.selectedSku, [specId]: id };
+      // 选择规格
       specList.forEach((item) => {
-        item.specValueList.forEach((valuesItem) => {
-          if (item.specId === specId) {
-            valuesItem.isSelected = valuesItem.specValueId === selectedSku[specId];
+        item.spuSaleAttrValueList.forEach((valuesItem) => {
+          // 重置其他的规格
+          if(item.id === specId) {
+            valuesItem.isChecked = '0'
+          }
+          if (valuesItem.id === id) {
+            valuesItem.isChecked = '1';
           }
         });
       });
-      this.chooseSpecValueId(id, specId);
-      const isAllSelectedSku = this.isAllSelected(specList, selectedSku);
-      if (!isAllSelectedSku) {
-        this.setData({
-          selectSkuSellsPrice: 0,
-          selectSkuImg: '',
-        });
-      }
       this.setData({
-        specList,
-        isAllSelectedSku,
+        specList
       });
-      this.selectedSku = selectedSku;
       this.triggerEvent('change', {
         specList,
-        selectedSku,
-        isAllSelectedSku,
       });
     },
 
