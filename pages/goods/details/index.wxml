@@ -102,7 +102,6 @@
       jumpArray="{{jumpArray}}"
       soldout="{{soldout}}"
       isStock="{{isStock}}"
-      shopCartNum="{{cartNum}}"
       buttonType="{{buttonType}}"
       bind:toAddCart="toAddCart"
       bind:toNav="toNav"

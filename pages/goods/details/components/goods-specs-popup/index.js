@@ -267,19 +267,12 @@ Component({
       });
     },
 
-    // 总处理
-    setBuyNum(buyNum) {
-      this.setData({
-        buyNum,
-      });
-      this.triggerEvent('changeNum', {
-        buyNum,
-      });
-    },
-
     handleBuyNumChange(e) {
       const { value } = e.detail;
       this.setData({
+        buyNum: value,
+      });
+      this.triggerEvent('changeNum', {
         buyNum: value,
       });
     },
