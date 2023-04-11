@@ -170,19 +170,11 @@ Page({
     await fetchCheckedAllCart({ isAllSelected }).then(() => this.refreshData());
   },
 
+ /**
+  * 去结算
+  */
   onToSettle() {
-    const goodsRequestList = [];
-    this.data.cartGroupData.storeGoods.forEach((store) => {
-      store.promotionGoodsList.forEach((promotion) => {
-        promotion.goodsPromotionList.forEach((m) => {
-          if (m.isSelected == 1) {
-            goodsRequestList.push(m);
-          }
-        });
-      });
-    });
-    wx.setStorageSync('order.goodsRequestList', JSON.stringify(goodsRequestList));
-    wx.navigateTo({ url: '/pages/order/order-confirm/index?type=cart' });
+    wx.navigateTo({ url: '/pages/order/order-confirm/index' });
   },
   onGotoHome() {
     wx.switchTab({ url: '/pages/home/home' });

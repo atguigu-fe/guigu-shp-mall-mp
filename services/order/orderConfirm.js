@@ -1,6 +1,6 @@
 import { config } from '../../config/index';
 import { mockIp, mockReqId } from '../../utils/mock';
-
+import { request } from '../../utils/request';
 /** 获取结算mock数据 */
 function mockFetchSettleDetail(params) {
   const { delay } = require('../_utils/delay');
@@ -67,3 +67,13 @@ export function dispatchSupplementInvoice() {
     resolve('real api');
   });
 }
+
+/**
+ * 提交订单
+ */
+
+export function fetchTrade() {
+  return request({
+    url: `/api/order/auth/trade`,
+  })
+} 

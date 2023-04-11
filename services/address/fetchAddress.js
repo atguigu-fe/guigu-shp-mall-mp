@@ -48,6 +48,7 @@ export function fetchDeliveryAddressList(len = 10) {
   });
 }
 
+/** 获取地址列表 */
 export function fetchUserAddressList() {
   return request({
     url: `/api/user/userAddress/auth/findUserAddressList`,
