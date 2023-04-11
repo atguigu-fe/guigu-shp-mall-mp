@@ -1,0 +1,29 @@
+<view class="login">
+  <form>
+    <t-cell-group>
+      <t-input 
+        placeholder="请输入手机号"
+        value="{{formData.phone}}"
+        data-item="phone"
+        clearable
+        bind:change="onInputValue"
+      ></t-input>
+    </t-cell-group>
+    <t-cell-group>
+      <t-input
+        placeholder="请输入登陆密码"
+        value="{{formData.password}}"
+        data-item="password"
+        type="password"
+        bind:change="onInputValue"
+      ></t-input>
+    </t-cell-group>
+  </form>
+  <view class="login_btn">
+    <t-button 
+      block
+      disabled="{{!submitActive}}"
+      bind:tap="formSubmit">登陆</t-button>
+  </view>
+</view>
+<t-toast id="t-toast" />

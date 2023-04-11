@@ -2,7 +2,7 @@
  * @Author: 朽木白
  * @Date: 2023-02-10 23:11:51
  * @LastEditors: 1547702880@@qq.com
- * @LastEditTime: 2023-04-06 10:45:41
+ * @LastEditTime: 2023-04-11 16:07:21
  * @Description: wx.request
  * @docs: https://blog.csdn.net/qq_23073811/article/details/127387089
  */
@@ -24,9 +24,8 @@ export const request = (params) => {
   };
 
   // 鉴权验证，获取登录之后后端返回的token
-  if (!wx.getStorageSync('token')) {
-    // header.token = wx.getStorageSync('token');
-    header.token = 'b6dea26ed5244a33824d4b3ca5d54db6'
+  if (wx.getStorageSync('userInfo')) {
+    header.token = wx.getStorageSync('userInfo').token;
   }
   return new Promise((resolve, reject) => {
     wx.request({
@@ -44,9 +43,7 @@ export const request = (params) => {
               content: '请登录',
               showCancel: false,
               success(res) {
-                wx.navigateTo({
-                  url: '/pages/login/index',
-                });
+                wx.navigateTo({ url: '/pages/usercenter/login/login' });
               },
             });
             reject(res.data);

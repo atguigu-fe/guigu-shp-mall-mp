@@ -80,9 +80,8 @@ const orderTagInfos = [
 const getDefaultData = () => ({
   showMakePhone: false,
   userInfo: {
-    avatarUrl: '',
-    nickName: '正在登录...',
-    phoneNumber: '',
+    headUrl: '',
+    nickName: '',
   },
   menuData,
   orderTagInfos,
@@ -112,36 +111,19 @@ Page({
   },
 
   fetUseriInfoHandle() {
-    fetchUserCenter().then(
-      ({
+    // 重置用户信息
+    this.setData({
+      'userInfo.headUrl': '',
+      'userInfo.nickName': '',
+      currAuthStep: 1
+    })
+    const userInfo = wx.getStorageSync('userInfo');
+    if (userInfo) {
+      this.setData({
         userInfo,
-        countsData,
-        orderTagInfos: orderInfo,
-        customerServiceInfo,
-      }) => {
-        // eslint-disable-next-line no-unused-expressions
-        menuData?.[0].forEach((v) => {
-          countsData.forEach((counts) => {
-            if (counts.type === v.type) {
-              // eslint-disable-next-line no-param-reassign
-              v.tit = counts.num;
-            }
-          });
-        });
-        const info = orderTagInfos.map((v, index) => ({
-          ...v,
-          ...orderInfo[index],
-        }));
-        this.setData({
-          userInfo,
-          menuData,
-          orderTagInfos: info,
-          customerServiceInfo,
-          currAuthStep: 1,
-        });
-        wx.stopPullDownRefresh();
-      },
-    );
+        currAuthStep: 2
+      })
+    }
   },
 
   onClickCell({ currentTarget }) {
@@ -226,7 +208,7 @@ Page({
     if (currAuthStep === 2) {
       wx.navigateTo({ url: '/pages/usercenter/person-info/index' });
     } else {
-      this.fetUseriInfoHandle();
+      wx.navigateTo({ url: '/pages/usercenter/login/login' });
     }
   },
 

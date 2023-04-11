@@ -1,14 +1,12 @@
-import { fetchPerson } from '../../../services/usercenter/fetchPerson';
+import { featchLogout } from '../../../services/usercenter/fetchPerson';
 import { phoneEncryption } from '../../../utils/util';
 import Toast from 'tdesign-miniprogram/toast/index';
 
 Page({
   data: {
     personInfo: {
-      avatarUrl: '',
+      headUrl: '',
       nickName: '',
-      gender: 0,
-      phoneNumber: '',
     },
     showUnbindConfirm: false,
     pickerOptions: [
@@ -31,12 +29,10 @@ Page({
     this.fetchData();
   },
   fetchData() {
-    fetchPerson().then((personInfo) => {
-      this.setData({
-        personInfo,
-        'personInfo.phoneNumber': phoneEncryption(personInfo.phoneNumber),
-      });
-    });
+    const userInfo = wx.getStorageSync('userInfo');
+    this.setData({
+      personInfo: userInfo
+    })
   },
   onClickCell({ currentTarget }) {
     const { dataset } = currentTarget;
@@ -119,4 +115,15 @@ Page({
       });
     }
   },
+  /**
+   * 退出登陆
+   */
+  handleLogout() {
+    featchLogout().then((res) => {
+      if (res.code === 200) {
+        wx.removeStorageSync('userInfo');
+        wx.switchTab({ url: '/pages/usercenter/index' });
+      }
+    })
+  }
 });
