@@ -137,7 +137,7 @@ Page({
           menuData,
           orderTagInfos: info,
           customerServiceInfo,
-          currAuthStep: 2,
+          currAuthStep: 1,
         });
         wx.stopPullDownRefresh();
       },

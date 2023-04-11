@@ -1,7 +1,12 @@
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchDeliveryAddress } from '../../../../services/address/fetchAddress';
+import { 
+  fetchAddressDetail,
+  fetchRegionList,
+  fetchProvinceList,
+  fetchSaveAddress,
+  fetchUpdateAddress
+} from '../../../../services/address/fetchAddress';
 import { areaData } from '../../../../config/index';
-import { resolveAddress, rejectAddress } from './util';
 
 const innerPhoneReg = '^1(?:3\\d|4[4-9]|5[0-35-9]|6[67]|7[0-8]|8\\d|9\\d)\\d{8}$';
 const innerNameReg = '^[a-zA-Z\\d\\u4e00-\\u9fa5]+$';
@@ -17,26 +22,20 @@ Page({
   externalClasses: ['theme-wrapper-class'],
   data: {
     locationState: {
-      labelIndex: null,
-      addressId: '',
-      addressTag: '',
-      cityCode: '',
-      cityName: '',
-      countryCode: '',
-      countryName: '',
-      detailAddress: '',
-      districtCode: '',
-      districtName: '',
-      isDefault: false,
-      name: '',
-      phone: '',
-      provinceCode: '',
-      provinceName: '',
-      isEdit: false,
-      isOrderDetail: false,
-      isOrderSure: false,
+      consignee: '',
+      phoneNum: '',
+      userAddress: '',
+      fullAddress: '华北1北京',
+      id: '',
+      uerId: null,
+      provinceId: 1,
+      regionId: 1,
+      isDefault: 0,
     },
-    areaData: areaData,
+    idEdit: false,
+    areaData: [],
+    regions: [],
+    provinces: [],
     labels: labelsOptions,
     areaPickerVisible: false,
     submitActive: false,
@@ -52,22 +51,24 @@ Page({
     this.init(id);
   },
 
-  onUnload() {
-    if (!this.hasSava) {
-      rejectAddress();
-    }
-  },
-
   hasSava: false,
 
   init(id) {
     if (id) {
+      this.setData({
+        'locationState.id': id,
+        isEdit: true
+      })
       this.getAddressDetail(Number(id));
     }
   },
   getAddressDetail(id) {
-    fetchDeliveryAddress(id).then((detail) => {
-      this.setData({ locationState: detail }, () => {
+    fetchAddressDetail(id).then((detail) => {
+      this.setData({ locationState: detail.data }, () => {
+        // const { provinceId } = detail.data
+        // const regionId = 4
+        // this.getOriginAddProvince(regionId, provinceId)
+        // 校验规则是否都满足，来控制保存按钮是否可点击
         const { isLegal, tips } = this.onVerifyInputLegal();
         this.setData({
           submitActive: isLegal,
@@ -76,28 +77,16 @@ Page({
       });
     });
   },
+
+  /**  cascader change事件 */
   onInputValue(e) {
     const { item } = e.currentTarget.dataset;
+
     if (item === 'address') {
       const { selectedOptions = [] } = e.detail;
-      this.setData(
-        {
-          'locationState.provinceCode': selectedOptions[0].value,
-          'locationState.provinceName': selectedOptions[0].label,
-          'locationState.cityName': selectedOptions[1].label,
-          'locationState.cityCode': selectedOptions[1].value,
-          'locationState.districtCode': selectedOptions[2].value,
-          'locationState.districtName': selectedOptions[2].label,
-          areaPickerVisible: false,
-        },
-        () => {
-          const { isLegal, tips } = this.onVerifyInputLegal();
-          this.setData({
-            submitActive: isLegal,
-          });
-          this.privateData.verifyTips = tips;
-        },
-      );
+      if (selectedOptions.length === 1) {
+        this.getProvinceList(selectedOptions[0].value)
+      }
     } else {
       const { value = '' } = e.detail;
       this.setData(
@@ -114,7 +103,9 @@ Page({
       );
     }
   },
+  /** 选择省市区 */
   onPickArea() {
+    // 回显
     this.setData({ areaPickerVisible: true });
   },
   onPickLabels(e) {
@@ -161,50 +152,51 @@ Page({
     });
   },
 
+  /** 正则校验 */
   onVerifyInputLegal() {
-    const { name, phone, detailAddress, districtName } = this.data.locationState;
+    const { consignee, phoneNum, userAddress, districtName } = this.data.locationState;
     const prefixPhoneReg = String(this.properties.phoneReg || innerPhoneReg);
     const prefixNameReg = String(this.properties.nameReg || innerNameReg);
     const nameRegExp = new RegExp(prefixNameReg);
     const phoneRegExp = new RegExp(prefixPhoneReg);
 
-    if (!name || !name.trim()) {
+    if (!consignee || !consignee.trim()) {
       return {
         isLegal: false,
         tips: '请填写收货人',
       };
     }
-    if (!nameRegExp.test(name)) {
+    if (!nameRegExp.test(consignee)) {
       return {
         isLegal: false,
         tips: '收货人仅支持输入中文、英文（区分大小写）、数字',
       };
     }
-    if (!phone || !phone.trim()) {
+    if (!phoneNum || !phoneNum.trim()) {
       return {
         isLegal: false,
         tips: '请填写手机号',
       };
     }
-    if (!phoneRegExp.test(phone)) {
+    if (!phoneRegExp.test(phoneNum)) {
       return {
         isLegal: false,
         tips: '请填写正确的手机号',
       };
     }
-    if (!districtName || !districtName.trim()) {
-      return {
-        isLegal: false,
-        tips: '请选择省市区信息',
-      };
-    }
-    if (!detailAddress || !detailAddress.trim()) {
+    // if (!districtName || !districtName.trim()) {
+    //   return {
+    //     isLegal: false,
+    //     tips: '请选择省市区信息',
+    //   };
+    // }
+    if (!userAddress || !userAddress.trim()) {
       return {
         isLegal: false,
         tips: '请完善详细地址',
       };
     }
-    if (detailAddress && detailAddress.trim().length > 50) {
+    if (userAddress && userAddress.trim().length > 50) {
       return {
         isLegal: false,
         tips: '详细地址不能超过50个字符',
@@ -294,7 +286,7 @@ Page({
       });
     });
   },
-  formSubmit() {
+  async formSubmit() {
     const { submitActive } = this.data;
     if (!submitActive) {
       Toast({
@@ -310,30 +302,11 @@ Page({
 
     this.hasSava = true;
 
-    resolveAddress({
-      saasId: '88888888',
-      uid: `88888888205500`,
-      authToken: null,
-      id: locationState.addressId,
-      addressId: locationState.addressId,
-      phone: locationState.phone,
-      name: locationState.name,
-      countryName: locationState.countryName,
-      countryCode: locationState.countryCode,
-      provinceName: locationState.provinceName,
-      provinceCode: locationState.provinceCode,
-      cityName: locationState.cityName,
-      cityCode: locationState.cityCode,
-      districtName: locationState.districtName,
-      districtCode: locationState.districtCode,
-      detailAddress: locationState.detailAddress,
-      isDefault: locationState.isDefault === 1 ? 1 : 0,
-      addressTag: locationState.addressTag,
-      latitude: locationState.latitude,
-      longitude: locationState.longitude,
-      storeId: null,
-    });
-
+    if (this.data.isEdit) {
+      await fetchUpdateAddress(locationState)
+    } else {
+      await fetchSaveAddress(locationState)
+    }
     wx.navigateBack({ delta: 1 });
   },
 

@@ -48,7 +48,7 @@ page {
 .address-container .btn-wrap {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   font-size: 32rpx;
   font-weight: bold;

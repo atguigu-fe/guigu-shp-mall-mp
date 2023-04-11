@@ -18,10 +18,10 @@
             slot="note"
             t-class="field-text"
             borderless
-            data-item="name"
             maxlength="20"
             type="text"
-            value="{{locationState.name}}"
+            value="{{locationState.consignee}}"
+            data-item="consignee"
             placeholder="您的姓名"
             bind:change="onInputValue"
           />
@@ -33,11 +33,11 @@
             t-class="field-text"
             borderless
             type="number"
-            value="{{locationState.phone}}"
+            value="{{locationState.phoneNum}}"
             maxlength="11"
             placeholder="联系您的手机号"
             bind:change="onInputValue"
-            data-item="phone"
+            data-item="phoneNum"
           />
         </t-cell>
         <t-cell class="form-cell" t-class-title="t-cell-title" title="地区">
@@ -46,9 +46,9 @@
             class="t-input"
             t-class="field-text"
             borderless
-            placeholder="省/市/区"
+            placeholder="大区/省"
             data-item="address"
-            value="{{locationState.provinceName ? locationState.provinceName+'/':'' }}{{locationState.cityName ? locationState.cityName+'/':''}}{{locationState.districtName}}"
+            value="{{locationState.regionName ? locationState.regionName+'/':'' }}{{locationState.provinceName ? locationState.provinceName :''}}"
             catch:tap="onPickArea"
             disabled
           />
@@ -59,16 +59,16 @@
             <t-textarea
               slot="note"
               type="text"
-              value="{{locationState.detailAddress}}"
+              value="{{locationState.userAddress}}"
               placeholder="门牌号等(例如:10栋1001号)"
               autosize
               bind:change="onInputValue"
-              data-item="detailAddress"
+              data-item="userAddress"
             />
           </view>
         </t-cell>
-
-        <view class="divider-line" />
+        <!-- 标签tag -->
+        <!-- <view class="divider-line" />
         <t-cell
           class="form-cell"
           t-class-note="t-cell-note address__tag"
@@ -92,10 +92,11 @@
               <t-icon name="add" size="40rpx" color="#bbb" />
             </t-button>
           </view>
-        </t-cell>
+        </t-cell> -->
         <view class="divider-line" />
         <t-cell title="设置为默认收货地址" bordered="{{false}}">
           <t-switch
+            custom-value="{{['1','0']}}"
             value="{{locationState.isDefault}}"
             slot="note"
             colors="{{['#0ABF5B', '#c6c6c6']}}"
@@ -108,16 +109,25 @@
       </view>
     </form>
   </view>
-  <t-cascader
+  <!-- <t-cascader
     data-item="address"
     data-type="1"
     visible="{{areaPickerVisible}}"
     theme="tab"
     options="{{areaData}}"
-    value="{{locationState.districtCode}}"
+    value="{{locationState.provinceCode}}"
     title="选择地区"
     bind:change="onInputValue"
-  ></t-cascader>
+  ></t-cascader> -->
+  <t-picker
+    visible="{{areaPickerVisible}}"
+    title="选择地区"
+    cancelBtn="取消"
+    confirmBtn="确认"
+  >
+    <t-picker-item options="{{regions}}"></t-picker-item>
+    <t-picker-item options="{{provinces}}"></t-picker-item>
+  </t-picker>
 </view>
 <t-dialog
   visible="{{visible}}"
