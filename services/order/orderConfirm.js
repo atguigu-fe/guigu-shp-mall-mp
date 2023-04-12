@@ -69,11 +69,22 @@ export function dispatchSupplementInvoice() {
 }
 
 /**
- * 提交订单
+ * 获取订单详情
  */
 
 export function fetchTrade() {
   return request({
     url: `/api/order/auth/trade`,
   })
-} 
+}
+
+/**
+ * 提交订单
+ */
+export function fetchSubmitOrder(data) {;
+  return request({
+    url: `/api/order/info/auth/submitOrder`,
+    method: 'POST',
+    data,
+  })
+}

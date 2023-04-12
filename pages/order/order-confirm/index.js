@@ -1,5 +1,5 @@
 import { fetchUserAddressList } from '../../../services/address/fetchAddress';
-import { fetchTrade } from '../../../services/order/orderConfirm';
+import { fetchTrade, fetchSubmitOrder } from '../../../services/order/orderConfirm';
 // const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
 
 Page({
@@ -20,7 +20,6 @@ Page({
   /** 获取订单信息 */
   getTrade() {
     fetchTrade().then(res => {
-      console.log(res);
       this.setData({orderInfo: res.data})
     })
   },
@@ -38,6 +37,14 @@ Page({
           }
         })
       }
+    })
+  },
+
+  submitOrder() {
+    const { orderInfo } = this.data
+
+    fetchSubmitOrder(orderInfo).then(res => {
+      console.log(res);
     })
   }
 });
