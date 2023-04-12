@@ -12,7 +12,7 @@ import { getGoodsList } from './goods';
 export function getSearchHistory() {
   return {
     historyWords: [
-      '鸡',
+      '手机',
       '电脑',
       'iPhone12',
       '车载手机支架',

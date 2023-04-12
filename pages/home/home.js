@@ -101,9 +101,10 @@ Page({
       }
       const result = await fetchGoodsList(params);
       const nextList = result.data.goodsList
+
       this.setData({
         goodsList: fresh ? nextList : this.data.goodsList.concat(nextList),
-        goodsListLoadStatus: 0,
+        goodsListLoadStatus: nextList.length < pageSize ? 2 : 0,
       });
 
       this.goodListPagination.index = pageIndex;
