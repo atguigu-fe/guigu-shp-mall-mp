@@ -1,5 +1,5 @@
 import { fetchUserAddressList } from '../../../services/address/fetchAddress';
-import { fetchTrade, fetchSubmitOrder } from '../../../services/order/orderConfirm';
+import { fetchTrade, fetchOrderm, fetchSubmitOrder, fetchOrder } from '../../../services/order/orderConfirm';
 // const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
 
 Page({
@@ -8,13 +8,28 @@ Page({
     orderInfo: null,
     submitActive: false
   },
-  onShow() {
-    this.init()
+  onLoad({skuId}) {
+    console.log(skuId);
+    if (skuId) {
+      this.getOrder(skuId)
+      this.getUserAddressList()
+    } else {
+      this.init()
+    }
   },
 
   init() {
     this.getUserAddressList()
     this.getTrade()
+  },
+
+  /** 获取单个订单详情 */
+  getOrder(skuId) {
+    fetchOrder(skuId).then(res => {
+      this.setData({
+        orderInfo: res.data
+      })
+    })
   },
 
   /** 获取订单信息 */

@@ -69,9 +69,18 @@ export function dispatchSupplementInvoice() {
 }
 
 /**
+ * 获取单个订单详情
+ */
+export function fetchOrder(skuId) {
+  return request({
+    url: `/api/order/auth/buy/${skuId}`,
+  })
+}
+
+
+/**
  * 获取订单详情
  */
-
 export function fetchTrade() {
   return request({
     url: `/api/order/auth/trade`,
